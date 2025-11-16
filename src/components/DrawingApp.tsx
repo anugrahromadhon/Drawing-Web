@@ -231,13 +231,34 @@ useEffect(() => {
   };
 
 
-  const exportImage = (format) => {
+// contoh: exportImage yang sudah bertipe + guard null
+  const exportImage = (format: "png" | "jpeg" = "png") => {
     const canvas = canvasRef.current;
-    const link = document.createElement('a');
-    link.download = `gambar-${questions[currentQuestion].title.toLowerCase().replace(/\s/g, '-')}.${format}`;
-    link.href = canvas.toDataURL(`image/${format}`);
+    if (!canvas) return; // guard: belum ada canvas
+  
+    // pilih mime type sesuai format
+    const mime = format === "jpeg" ? "image/jpeg" : "image/png";
+  
+    // nama file (jaga agar tidak crash kalau questions atau currentQuestion undefined)
+    const title =
+      (questions && questions[currentQuestion]?.title) ||
+      "drawing";
+    const safeTitle = title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+    const filename = `gambar-${safeTitle}.${format}`;
+  
+    // kalau mau kualitas JPEG tertentu, bisa gunakan toDataURL('image/jpeg', quality)
+    const dataUrl = canvas.toDataURL(mime);
+  
+    // buat link untuk download
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = filename;
+    // klik link secara programatik
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
+
 
   const nextQuestion = () => {
     setCurrentQuestion((prev) => (prev + 1) % questions.length);
