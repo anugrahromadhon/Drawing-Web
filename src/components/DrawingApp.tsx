@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Download, Eraser, Trash2, Palette, RefreshCw } from 'lucide-react';
 
 export default function DrawingApp() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(5);
@@ -105,19 +105,45 @@ export default function DrawingApp() {
     '#FFFF00', '#FF00FF', '#00FFFF', '#FF8800', '#8B4513'
   ];
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-  }, []);
+useEffect(() => {
+  const canvas = canvasRef.current;
+  if (!canvas) return; // <-- guard: jika belum ada, hentikan
+
+  // set ukuran canvas mengikuti elemen container (atau offset)
+  // gunakan devicePixelRatio untuk ketajaman di layar high-DPI
+  const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+  const width = canvas.offsetWidth;
+  const height = canvas.offsetHeight;
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return; // <-- guard lagi: getContext bisa mengembalikan null
+
+  // scaling untuk devicePixelRatio
+  ctx.scale(dpr, dpr);
+
+  // Contoh inisialisasi (bersihkan / set default)
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = currentColor || "#000";
+  ctx.lineWidth = brushSize || 4;
+  ctx.clearRect(0, 0, width, height);
+
+  // event handlers bisa didaftarkan di sini atau di efek terpisah
+  // contoh sederhana cleanup:
+  return () => {
+    // kalau ada event listener yang didaftarkan pada canvas/window, hapus di sini
+    // e.g. canvas.removeEventListener('pointerdown', handleDown)
+  };
+}, [
+  // tambahkan dependensi yang relevan seperti currentColor, brushSize, dsb
+  currentColor,
+  brushSize,
+]);
+
 
   const startDrawing = (e) => {
     const canvas = canvasRef.current;
