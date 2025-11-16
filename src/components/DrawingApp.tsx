@@ -6,8 +6,8 @@ import { Download, Eraser, Trash2, Palette, RefreshCw } from 'lucide-react';
 export default function DrawingApp() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [color, setColor] = useState('#000000');
-  const [brushSize, setBrushSize] = useState(5);
+  const [color, setColor] = useState<string>("#000000");
+  const [brushSize, setBrushSize] = useState<number>(5);
   const [tool, setTool] = useState('pen');
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -111,8 +111,8 @@ useEffect(() => {
 
   // dukungan high DPI
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-  const width = canvas.offsetWidth;
-  const height = canvas.offsetHeight;
+  const width = canvas.offsetWidth || 800;
+  const height = canvas.offsetHeight || 600;
 
   canvas.width = Math.floor(width * dpr);
   canvas.height = Math.floor(height * dpr);
@@ -144,9 +144,12 @@ useEffect(() => {
   // pastikan dependensi mencakup state yang dipakai
 }, [color, brushSize]);
 
-  const startDrawing = (e) => {
+  const startDrawing = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    (e.target as HTMLCanvasElement).setPointerCapture?.(e.pointerId);
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -156,15 +159,17 @@ useEffect(() => {
     ctx.moveTo(x, y);
   };
 
-  const draw = (e) => {
+  const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
 
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
+    
     if (tool === 'pen') {
       ctx.strokeStyle = color;
       ctx.lineWidth = brushSize;
@@ -178,7 +183,16 @@ useEffect(() => {
     }
   };
 
-  const stopDrawing = () => {
+  const stopDrawing = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+  
+    // release pointer capture
+    (e.target as HTMLCanvasElement).releasePointerCapture?.(e.pointerId);
+  
+    ctx.closePath();
     setIsDrawing(false);
   };
 
@@ -186,7 +200,7 @@ useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, width, height);
   };
 
   const exportImage = (format) => {
