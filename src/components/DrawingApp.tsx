@@ -107,43 +107,42 @@ export default function DrawingApp() {
 
 useEffect(() => {
   const canvas = canvasRef.current;
-  if (!canvas) return; // <-- guard: jika belum ada, hentikan
+  if (!canvas) return;
 
-  // set ukuran canvas mengikuti elemen container (atau offset)
-  // gunakan devicePixelRatio untuk ketajaman di layar high-DPI
+  // dukungan high DPI
   const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
   const width = canvas.offsetWidth;
   const height = canvas.offsetHeight;
+
   canvas.width = Math.floor(width * dpr);
   canvas.height = Math.floor(height * dpr);
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return; // <-- guard lagi: getContext bisa mengembalikan null
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  // scaling untuk devicePixelRatio
+  // set background putih
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // garis & styling
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  // gunakan state `color` dan `brushSize` yang memang ada
+  ctx.strokeStyle = color || '#000000';
+  ctx.lineWidth = brushSize || 5;
+
+  // scale untuk high-DPI (ctx sudah pakai pixel dimensi canvas)
   ctx.scale(dpr, dpr);
 
-  // Contoh inisialisasi (bersihkan / set default)
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = currentColor || "#000";
-  ctx.lineWidth = brushSize || 4;
-  ctx.clearRect(0, 0, width, height);
-
-  // event handlers bisa didaftarkan di sini atau di efek terpisah
-  // contoh sederhana cleanup:
+  // cleanup jika perlu
   return () => {
-    // kalau ada event listener yang didaftarkan pada canvas/window, hapus di sini
-    // e.g. canvas.removeEventListener('pointerdown', handleDown)
+    // jika menambahkan event listener di sini, hapus di return
   };
-}, [
-  // tambahkan dependensi yang relevan seperti currentColor, brushSize, dsb
-  currentColor,
-  brushSize,
-]);
-
+  // pastikan dependensi mencakup state yang dipakai
+}, [color, brushSize]);
 
   const startDrawing = (e) => {
     const canvas = canvasRef.current;
