@@ -196,12 +196,40 @@ useEffect(() => {
     setIsDrawing(false);
   };
 
+// Ganti fungsi clearCanvas Anda dengan ini
   const clearCanvas = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;                 // guard: kalau belum ada, keluar
+  
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;                    // guard lagi: kalau getContext gagal, keluar
+  
+    // device pixel ratio (sama saat inisialisasi canvas)
+    const dpr = (typeof window !== "undefined" ? window.devicePixelRatio : 1) || 1;
+  
+    // canvas.width/height adalah dalam pixel nyata (sudah dikali dpr)
+    // untuk menggambar/clear dalam koordinat CSS (yang kita scale di ctx),
+    // pakai width/height dibagi dpr
+    const cssWidth = canvas.width / dpr;
+    const cssHeight = canvas.height / dpr;
+  
+    // Reset transform supaya clear/fill tepat (jika sebelumnya ctx.scale(dpr,dpr) dipanggil)
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  
+    // Isi background putih (atau gunakan clearRect saja)
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+    // Jika kamu ingin tetap menggunakan koordinat CSS (tidak pixel scaled),
+    // bisa juga menggunakan:
+    // ctx.clearRect(0, 0, cssWidth, cssHeight);
+    // ctx.fillRect(0, 0, cssWidth, cssHeight);
+  
+    // Kalau setelah reset transform perlu kembali scale untuk menggambar nanti,
+    // skala lagi sesuai dpr supaya drawing selanjutnya konsisten:
+    ctx.scale(dpr, dpr);
   };
+
 
   const exportImage = (format) => {
     const canvas = canvasRef.current;
