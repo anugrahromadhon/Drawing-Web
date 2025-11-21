@@ -13,90 +13,76 @@ export default function DrawingApp() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const questions = [
-      {
-        title: "Soal 1: Gambar Damar Kurung",
-        description: "Pak Ali membuat gambar di kertas damar kurung. Gambar pasar tradisional menutupi ⅓ bagian kertas. Gambar perahu menutupi ⅙ bagian kertas. Berapakah bagian kertas yang sudah terisi gambar seluruhnya?",
-        hint: "Total = ⅓ + ⅙ = 2/6 + 1/6 = 3/6 = ½ (setengah kertas)",
-        image: "gambar/soal1.png"
-      },
-      {
-        title: "Soal 2: Lentera Damar Kurung",
-        description: "Damar Kurung menggunakan lampu sebagai sumber cahaya, dimana cahaya tersebut merambat lurus dan menembus kertas, sehingga gambar di kertas tampak bersinar. Di festival Damar Kurung, terdapat 10 lentera yang terbuat dari kertas bergambar. Setengah (½) dari banyaknya lentera itu sudah menyala. Berapakah jumlah lentera yang lampunya sudah menyala?",
-        hint: "½ × 10 = 5 lentera",
-        image: "gambar/soal2.png"
-      },
-      {
-        title: "Soal 3: Kertas Damar Kurung Rusak",
-        description: "Pengrajin telah melukis 4/5 bagian kertas dengan berbagai motif. Dalam proses pengeringan, sayangnya 1/5 bagian lukisan itu rusak karena terciprat air. Berapakah sisa pecahan bagian kertas Damar Kurung yang lukisannya masih utuh?",
-        hint: "4/5 - 1/5 = 3/5 (tiga per lima masih utuh)",
-        image: "gambar/soal3.png"
-      }
-    ];
-  
+    {
+      title: "Soal 1: Gambar Damar Kurung",
+      description: "Pak Ali membuat gambar di kertas damar kurung. Gambar pasar tradisional menutupi ⅓ bagian kertas. Gambar perahu menutupi ⅙ bagian kertas. Berapakah bagian kertas yang sudah terisi gambar seluruhnya?",
+      hint: "Total = ⅓ + ⅙ = 2/6 + 1/6 = 3/6 = ½ (setengah kertas)",
+      image: "gambar/soal1.png"
+    },
+    {
+      title: "Soal 2: Lentera Damar Kurung",
+      description: "Damar Kurung menggunakan lampu sebagai sumber cahaya, dimana cahaya tersebut merambat lurus dan menembus kertas, sehingga gambar di kertas tampak bersinar. Di festival Damar Kurung, terdapat 10 lentera yang terbuat dari kertas bergambar. Setengah (½) dari banyaknya lentera itu sudah menyala. Berapakah jumlah lentera yang lampunya sudah menyala?",
+      hint: "½ × 10 = 5 lentera",
+      image: "gambar/soal2.png"
+    },
+    {
+      title: "Soal 3: Kertas Damar Kurung Rusak",
+      description: "Pengrajin telah melukis 4/5 bagian kertas dengan berbagai motif. Dalam proses pengeringan, sayangnya 1/5 bagian lukisan itu rusak karena terciprat air. Berapakah sisa pecahan bagian kertas Damar Kurung yang lukisannya masih utuh?",
+      hint: "4/5 - 1/5 = 3/5 (tiga per lima masih utuh)",
+      image: "gambar/soal3.png"
+    }
+  ];
+
   const colors = [
     '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
     '#FFFF00', '#FF00FF', '#00FFFF', '#FF8800', '#8B4513'
   ];
 
-useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  // dukungan high DPI
-  const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-  const width = canvas.offsetWidth || 800;
-  const height = canvas.offsetHeight || 600;
+    const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+    const width = canvas.offsetWidth || 800;
+    const height = canvas.offsetHeight || 600;
 
-  canvas.width = Math.floor(width * dpr);
-  canvas.height = Math.floor(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  // set background putih
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // garis & styling
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = color || '#000000';
+    ctx.lineWidth = brushSize || 5;
+    ctx.scale(dpr, dpr);
 
-  // gunakan state `color` dan `brushSize` yang memang ada
-  ctx.strokeStyle = color || '#000000';
-  ctx.lineWidth = brushSize || 5;
-
-  // scale untuk high-DPI (ctx sudah pakai pixel dimensi canvas)
-  ctx.scale(dpr, dpr);
-
-  // cleanup jika perlu
-  return () => {
-    // jika menambahkan event listener di sini, hapus di return
-  };
-  // pastikan dependensi mencakup state yang dipakai
-}, [color, brushSize]);
+    return () => {};
+  }, [color, brushSize]);
 
   const startDrawing = (e: React.PointerEvent<HTMLCanvasElement>) => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  
-  // Capture pointer untuk tracking yang lebih baik
-  (e.target as HTMLCanvasElement).setPointerCapture?.(e.pointerId);
-  
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    (e.target as HTMLCanvasElement).setPointerCapture?.(e.pointerId);
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-  setIsDrawing(true);
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-};
+    setIsDrawing(true);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
 
   const draw = (e: React.PointerEvent<HTMLCanvasElement>) => {
-  if (!isDrawing) return;
+    if (!isDrawing) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -125,76 +111,45 @@ useEffect(() => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
   
-    // Release pointer capture
     (e.target as HTMLCanvasElement).releasePointerCapture?.(e.pointerId);
   
     ctx.closePath();
     setIsDrawing(false);
   };
 
-// Ganti fungsi clearCanvas Anda dengan ini
   const clearCanvas = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;                 // guard: kalau belum ada, keluar
+    if (!canvas) return;
   
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;                    // guard lagi: kalau getContext gagal, keluar
+    if (!ctx) return;
   
-    // device pixel ratio (sama saat inisialisasi canvas)
     const dpr = (typeof window !== "undefined" ? window.devicePixelRatio : 1) || 1;
   
-    // canvas.width/height adalah dalam pixel nyata (sudah dikali dpr)
-    // untuk menggambar/clear dalam koordinat CSS (yang kita scale di ctx),
-    // pakai width/height dibagi dpr
-    const cssWidth = canvas.width / dpr;
-    const cssHeight = canvas.height / dpr;
-  
-    // Reset transform supaya clear/fill tepat (jika sebelumnya ctx.scale(dpr,dpr) dipanggil)
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-  
-    // Isi background putih (atau gunakan clearRect saja)
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-    // Jika kamu ingin tetap menggunakan koordinat CSS (tidak pixel scaled),
-    // bisa juga menggunakan:
-    // ctx.clearRect(0, 0, cssWidth, cssHeight);
-    // ctx.fillRect(0, 0, cssWidth, cssHeight);
-  
-    // Kalau setelah reset transform perlu kembali scale untuk menggambar nanti,
-    // skala lagi sesuai dpr supaya drawing selanjutnya konsisten:
     ctx.scale(dpr, dpr);
   };
 
-
-// contoh: exportImage yang sudah bertipe + guard null
   const exportImage = (format: "png" | "jpeg" = "png") => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // guard: belum ada canvas
+    if (!canvas) return;
   
-    // pilih mime type sesuai format
     const mime = format === "jpeg" ? "image/jpeg" : "image/png";
-  
-    // nama file (jaga agar tidak crash kalau questions atau currentQuestion undefined)
-    const title =
-      (questions && questions[currentQuestion]?.title) ||
-      "drawing";
+    const title = (questions && questions[currentQuestion]?.title) || "drawing";
     const safeTitle = title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
     const filename = `gambar-${safeTitle}.${format}`;
   
-    // kalau mau kualitas JPEG tertentu, bisa gunakan toDataURL('image/jpeg', quality)
     const dataUrl = canvas.toDataURL(mime);
   
-    // buat link untuk download
     const link = document.createElement("a");
     link.href = dataUrl;
     link.download = filename;
-    // klik link secara programatik
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-
 
   const nextQuestion = () => {
     setCurrentQuestion((prev) => (prev + 1) % questions.length);
@@ -205,7 +160,7 @@ useEffect(() => {
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          🎨 Papan Gambar Digital
+          🎨 Papan Gambar Digital - Damar Kurung
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -229,9 +184,16 @@ useEffect(() => {
                 <h3 className="text-lg font-semibold text-blue-600 mb-2">
                   {questions[currentQuestion].title}
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed mb-3">
                   {questions[currentQuestion].description}
                 </p>
+                {questions[currentQuestion].hint && (
+                  <div className="p-2 bg-green-50 border-l-4 border-green-400 rounded mb-3">
+                    <p className="text-sm text-green-800">
+                      💡 <strong>Petunjuk:</strong> {questions[currentQuestion].hint}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="border-2 border-gray-300 rounded-lg p-4 bg-gray-50">
@@ -239,7 +201,11 @@ useEffect(() => {
                   Contoh Gambar:
                 </h4>
                 <div className="flex justify-center items-center bg-white p-4 rounded">
-                  <div dangerouslySetInnerHTML={{ __html: questions[currentQuestion].example }} />
+                  <img 
+                    src={questions[currentQuestion].image} 
+                    alt={questions[currentQuestion].title}
+                    className="w-full h-auto max-w-md rounded shadow-sm"
+                  />
                 </div>
               </div>
 
@@ -365,7 +331,7 @@ useEffect(() => {
             </div>
 
             <p className="text-center mt-4 text-gray-600">
-              Gunakan mouse untuk menggambar di kanvas. Selamat berkreasi! 🎨
+              Gunakan mouse atau sentuh layar untuk menggambar di kanvas. Selamat berkreasi! 🎨
             </p>
           </div>
         </div>
