@@ -14,92 +14,118 @@ export default function DrawingApp() {
 
   const questions = [
     {
-      title: "Menggambar Rumah",
-      description: "Gambarlah sebuah rumah sederhana dengan atap segitiga, pintu persegi panjang, dan dua jendela!",
+      title: "Soal 1: Gambar Damar Kurung",
+      description: "Pak Ali membuat gambar di kertas damar kurung. Gambar pasar tradisional menutupi ⅓ bagian kertas. Gambar perahu menutupi ⅙ bagian kertas. Berapakah bagian kertas yang sudah terisi gambar seluruhnya?",
+      hint: "Total = ⅓ + ⅙ = 2/6 + 1/6 = 3/6 = ½ (setengah kertas)",
       example: `
-        <svg viewBox="0 0 200 200" class="w-full h-auto">
-          <!-- Rumah -->
-          <rect x="50" y="100" width="100" height="80" fill="#f0e68c" stroke="#8b7355" stroke-width="2"/>
-          <!-- Atap -->
-          <polygon points="50,100 100,60 150,100" fill="#dc143c" stroke="#8b0000" stroke-width="2"/>
-          <!-- Pintu -->
-          <rect x="85" y="140" width="30" height="40" fill="#8b4513" stroke="#654321" stroke-width="2"/>
-          <!-- Jendela kiri -->
-          <rect x="60" y="115" width="20" height="20" fill="#87ceeb" stroke="#4682b4" stroke-width="2"/>
-          <!-- Jendela kanan -->
-          <rect x="120" y="115" width="20" height="20" fill="#87ceeb" stroke="#4682b4" stroke-width="2"/>
+        <svg viewBox="0 0 400 300" class="w-full h-auto">
+          <!-- Kerangka Damar Kurung -->
+          <path d="M 80,50 L 120,20 L 160,50 L 160,200 L 80,200 Z" 
+                fill="none" stroke="#8B4513" stroke-width="3"/>
+          <line x1="80" y1="80" x2="160" y2="80" stroke="#8B4513" stroke-width="2"/>
+          <line x1="80" y1="120" x2="160" y2="120" stroke="#8B4513" stroke-width="2"/>
+          <line x1="80" y1="160" x2="160" y2="160" stroke="#8B4513" stroke-width="2"/>
+          <line x1="100" y1="50" x2="100" y2="200" stroke="#8B4513" stroke-width="2"/>
+          <line x1="140" y1="50" x2="140" y2="200" stroke="#8B4513" stroke-width="2"/>
+          
+          <!-- Gambar kecil pasar -->
+          <image x="85" y="85" width="25" height="25" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='20' y='40' width='60' height='40' fill='%23CD853F'/%3E%3Crect x='35' y='60' width='10' height='20' fill='%238B4513'/%3E%3Crect x='55' y='60' width='10' height='20' fill='%238B4513'/%3E%3C/svg%3E"/>
+          
+          <!-- Gambar kecil perahu -->
+          <image x="105" y="135" width="25" height="25" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='20,60 80,60 70,80 30,80' fill='%234169E1'/%3E%3Cpolygon points='50,30 55,60 45,60' fill='%23DC143C'/%3E%3C/svg%3E"/>
+          
+          <!-- Kertas dengan grid 6 bagian -->
+          <rect x="220" y="50" width="150" height="180" fill="white" stroke="black" stroke-width="2"/>
+          <line x1="220" y1="110" x2="370" y2="110" stroke="black" stroke-width="1"/>
+          <line x1="220" y1="170" x2="370" y2="170" stroke="black" stroke-width="1"/>
+          <line x1="295" y1="50" x2="295" y2="230" stroke="black" stroke-width="1"/>
+          
+          <!-- Gambar pasar (2 kotak = ⅓) -->
+          <rect x="220" y="50" width="75" height="60" fill="#FFE4B5" stroke="black" stroke-width="1"/>
+          <rect x="295" y="50" width="75" height="60" fill="#FFE4B5" stroke="black" stroke-width="1"/>
+          <text x="257" y="85" font-size="12" fill="black">Pasar</text>
+          
+          <!-- Gambar perahu (1 kotak = ⅙) -->
+          <rect x="220" y="110" width="75" height="60" fill="#B0E0E6" stroke="black" stroke-width="1"/>
+          <text x="245" y="145" font-size="12" fill="black">Perahu</text>
         </svg>
       `
     },
     {
-      title: "Menggambar Pohon",
-      description: "Gambarlah sebuah pohon dengan batang cokelat dan mahkota hijau berbentuk lingkaran!",
+      title: "Soal 2: Lentera Damar Kurung",
+      description: "Damar Kurung menggunakan lampu sebagai sumber cahaya, dimana cahaya tersebut merambat lurus dan menembus kertas, sehingga gambar di kertas tampak bersinar. Di festival Damar Kurung, terdapat 10 lentera yang terbuat dari kertas bergambar. Setengah (½) dari banyaknya lentera itu sudah menyala. Berapakah jumlah lentera yang lampunya sudah menyala?",
+      hint: "½ × 10 = 5 lentera",
       example: `
-        <svg viewBox="0 0 200 200" class="w-full h-auto">
-          <!-- Batang -->
-          <rect x="90" y="120" width="20" height="60" fill="#8b4513" stroke="#654321" stroke-width="2"/>
-          <!-- Mahkota -->
-          <circle cx="100" cy="100" r="50" fill="#228b22" stroke="#006400" stroke-width="2"/>
+        <svg viewBox="0 0 500 300" class="w-full h-auto">
+          <!-- 10 Lentera dalam 2 baris -->
+          <!-- Baris 1: 5 lentera (3 menyala, 2 tidak) -->
+          <g id="lentera-nyala-1">
+            <path d="M 40,80 L 50,60 L 60,80 L 60,130 L 40,130 Z" fill="#FFD700" stroke="#8B4513" stroke-width="2"/>
+            <rect x="45" y="55" width="10" height="5" fill="#8B4513"/>
+            <circle cx="50" cy="105" r="8" fill="#FF6347"/>
+            <line x1="45" y1="95" x2="55" y2="115" stroke="#FFD700" stroke-width="1"/>
+            <line x1="55" y1="95" x2="45" y2="115" stroke="#FFD700" stroke-width="1"/>
+          </g>
+          
+          <use href="#lentera-nyala-1" x="60" y="0"/>
+          <use href="#lentera-nyala-1" x="120" y="0"/>
+          
+          <!-- Lentera tidak menyala -->
+          <g id="lentera-mati">
+            <path d="M 220,80 L 230,60 L 240,80 L 240,130 L 220,130 Z" fill="#D3D3D3" stroke="#8B4513" stroke-width="2"/>
+            <rect x="225" y="55" width="10" height="5" fill="#8B4513"/>
+            <circle cx="230" cy="105" r="8" fill="#8B4513"/>
+          </g>
+          
+          <use href="#lentera-mati" x="60" y="0"/>
+          
+          <!-- Baris 2: 5 lentera (2 menyala, 3 tidak) -->
+          <use href="#lentera-nyala-1" x="0" y="100"/>
+          <use href="#lentera-nyala-1" x="60" y="100"/>
+          
+          <use href="#lentera-mati" x="-100" y="100"/>
+          <use href="#lentera-mati" x="-40" y="100"/>
+          <use href="#lentera-mati" x="20" y="100"/>
+          
+          <!-- Label -->
+          <text x="50" y="250" font-size="16" fill="black" font-weight="bold">5 lentera menyala</text>
+          <text x="250" y="250" font-size="16" fill="black" font-weight="bold">5 lentera mati</text>
         </svg>
       `
     },
     {
-      title: "Menggambar Mobil",
-      description: "Gambarlah sebuah mobil dengan badan persegi panjang dan dua roda bulat!",
+      title: "Soal 3: Kertas Damar Kurung Rusak",
+      description: "Pengrajin telah melukis 4/5 bagian kertas dengan berbagai motif. Dalam proses pengeringan, sayangnya 1/5 bagian lukisan itu rusak karena terciprat air. Berapakah sisa pecahan bagian kertas Damar Kurung yang lukisannya masih utuh?",
+      hint: "4/5 - 1/5 = 3/5 (tiga per lima masih utuh)",
       example: `
-        <svg viewBox="0 0 200 200" class="w-full h-auto">
-          <!-- Badan mobil -->
-          <rect x="40" y="110" width="120" height="40" fill="#ff4500" stroke="#8b0000" stroke-width="2"/>
-          <!-- Atap mobil -->
-          <rect x="60" y="90" width="60" height="20" fill="#ff6347" stroke="#8b0000" stroke-width="2"/>
-          <!-- Roda kiri -->
-          <circle cx="70" cy="150" r="15" fill="#2f4f4f" stroke="#000000" stroke-width="2"/>
-          <circle cx="70" cy="150" r="8" fill="#c0c0c0" stroke="#000000" stroke-width="2"/>
-          <!-- Roda kanan -->
-          <circle cx="130" cy="150" r="15" fill="#2f4f4f" stroke="#000000" stroke-width="2"/>
-          <circle cx="130" cy="150" r="8" fill="#c0c0c0" stroke="#000000" stroke-width="2"/>
-        </svg>
-      `
-    },
-    {
-      title: "Menggambar Matahari",
-      description: "Gambarlah matahari dengan lingkaran di tengah dan garis-garis sebagai sinar!",
-      example: `
-        <svg viewBox="0 0 200 200" class="w-full h-auto">
-          <!-- Lingkaran matahari -->
-          <circle cx="100" cy="100" r="30" fill="#ffd700" stroke="#ff8c00" stroke-width="2"/>
-          <!-- Sinar-sinar -->
-          <line x1="100" y1="50" x2="100" y2="70" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="100" y1="130" x2="100" y2="150" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="50" y1="100" x2="70" y2="100" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="130" y1="100" x2="150" y2="100" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="65" y1="65" x2="79" y2="79" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="121" y1="121" x2="135" y2="135" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="135" y1="65" x2="121" y2="79" stroke="#ff8c00" stroke-width="3"/>
-          <line x1="79" y1="121" x2="65" y2="135" stroke="#ff8c00" stroke-width="3"/>
-        </svg>
-      `
-    },
-    {
-      title: "Menggambar Bunga",
-      description: "Gambarlah bunga dengan 5 kelopak berbentuk oval dan batang hijau!",
-      example: `
-        <svg viewBox="0 0 200 200" class="w-full h-auto">
-          <!-- Batang -->
-          <line x1="100" y1="100" x2="100" y2="170" stroke="#228b22" stroke-width="4"/>
-          <!-- Tengah bunga -->
-          <circle cx="100" cy="100" r="12" fill="#ffd700" stroke="#ff8c00" stroke-width="2"/>
-          <!-- Kelopak -->
-          <ellipse cx="100" cy="70" rx="15" ry="25" fill="#ff69b4" stroke="#ff1493" stroke-width="2"/>
-          <ellipse cx="75" cy="85" rx="15" ry="25" fill="#ff69b4" stroke="#ff1493" stroke-width="2" transform="rotate(-72 75 85)"/>
-          <ellipse cx="82" cy="115" rx="15" ry="25" fill="#ff69b4" stroke="#ff1493" stroke-width="2" transform="rotate(-144 82 115)"/>
-          <ellipse cx="118" cy="115" rx="15" ry="25" fill="#ff69b4" stroke="#ff1493" stroke-width="2" transform="rotate(144 118 115)"/>
-          <ellipse cx="125" cy="85" rx="15" ry="25" fill="#ff69b4" stroke="#ff1493" stroke-width="2" transform="rotate(72 125 85)"/>
+        <svg viewBox="0 0 500 300" class="w-full h-auto">
+          <!-- Kertas dibagi 5 bagian vertikal -->
+          <rect x="50" y="50" width="80" height="200" fill="#2F4F2F" stroke="black" stroke-width="2"/>
+          <text x="70" y="160" font-size="14" fill="white">Utuh</text>
+          
+          <rect x="130" y="50" width="80" height="200" fill="#2F4F2F" stroke="black" stroke-width="2"/>
+          <text x="150" y="160" font-size="14" fill="white">Utuh</text>
+          
+          <rect x="210" y="50" width="80" height="200" fill="#2F4F2F" stroke="black" stroke-width="2"/>
+          <text x="230" y="160" font-size="14" fill="white">Utuh</text>
+          
+          <!-- Bagian rusak dengan efek air -->
+          <rect x="290" y="50" width="80" height="200" fill="#FFD700" stroke="black" stroke-width="2"/>
+          <circle cx="320" cy="100" r="15" fill="#87CEEB" opacity="0.6"/>
+          <circle cx="340" cy="140" r="20" fill="#87CEEB" opacity="0.6"/>
+          <circle cx="310" cy="180" r="18" fill="#87CEEB" opacity="0.6"/>
+          <text x="300" y="160" font-size="12" fill="red">Rusak</text>
+          
+          <rect x="370" y="50" width="80" height="200" fill="white" stroke="black" stroke-width="2"/>
+          <text x="380" y="160" font-size="12" fill="gray">Kosong</text>
+          
+          <!-- Keterangan -->
+          <text x="50" y="270" font-size="14" fill="black">3/5 kertas masih utuh</text>
         </svg>
       `
     }
   ];
-
+  
   const colors = [
     '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
     '#FFFF00', '#FF00FF', '#00FFFF', '#FF8800', '#8B4513'
