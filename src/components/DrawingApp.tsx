@@ -17,19 +17,19 @@ export default function DrawingApp() {
       title: "Soal 1: Gambar Damar Kurung",
       description: "Pak Ali membuat gambar di kertas damar kurung. Gambar pasar tradisional menutupi ⅓ bagian kertas. Gambar perahu menutupi ⅙ bagian kertas. Berapakah bagian kertas yang sudah terisi gambar seluruhnya?",
       hint: "Total = ⅓ + ⅙ = 2/6 + 1/6 = 3/6 = ½ (setengah kertas)",
-      image: "gambar/soal1.png"
+      image: "gambar/soal2.png"
     },
     {
       title: "Soal 2: Lentera Damar Kurung",
       description: "Damar Kurung menggunakan lampu sebagai sumber cahaya, dimana cahaya tersebut merambat lurus dan menembus kertas, sehingga gambar di kertas tampak bersinar. Di festival Damar Kurung, terdapat 10 lentera yang terbuat dari kertas bergambar. Setengah (½) dari banyaknya lentera itu sudah menyala. Berapakah jumlah lentera yang lampunya sudah menyala?",
       hint: "½ × 10 = 5 lentera",
-      image: "gambar/soal2.png"
+      image: "gambar/soal3.png"
     },
     {
       title: "Soal 3: Kertas Damar Kurung Rusak",
       description: "Pengrajin telah melukis 4/5 bagian kertas dengan berbagai motif. Dalam proses pengeringan, sayangnya 1/5 bagian lukisan itu rusak karena terciprat air. Berapakah sisa pecahan bagian kertas Damar Kurung yang lukisannya masih utuh?",
       hint: "4/5 - 1/5 = 3/5 (tiga per lima masih utuh)",
-      image: "gambar/soal3.png"
+      image: "gambar/soal1.png"
     }
   ];
 
