@@ -43,7 +43,7 @@ export default function DrawingApp() {
     if (!canvas) return;
 
     const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-    const width = canvas.offsetWidth || 800;
+    const width = canvas.offsetWidth || 500;
     const height = canvas.offsetHeight || 600;
 
     canvas.width = Math.floor(width * dpr);
