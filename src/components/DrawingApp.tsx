@@ -2,7 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Download, Eraser, Trash2, Palette, RefreshCw } from 'lucide-react';
-
+ 
 export default function DrawingApp() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
