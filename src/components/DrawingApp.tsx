@@ -44,7 +44,7 @@ export default function DrawingApp() {
 
     const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
     const width = canvas.offsetWidth || 800;
-    // UBAH: Tinggi default diperbesar agar panjang ke bawah
+    // Tinggi canvas tetap 750px sesuai request sebelumnya
     const height = canvas.offsetHeight || 750;
 
     canvas.width = Math.floor(width * dpr);
@@ -156,11 +156,14 @@ export default function DrawingApp() {
           🎨 Papan Gambar Digital - Damar Kurung
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Layout Grid 2 Kolom dengan tinggi yang sama */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
           
           {/* Panel Soal - Kiri */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-4">
+            {/* UBAH: Ditambahkan 'h-full flex flex-col' agar tinggi panel ini memenuhi kolom grid */}
+            <div className="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col">
+              
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-800">
                   📝 Soal {currentQuestion + 1}/{questions.length}
@@ -190,7 +193,7 @@ export default function DrawingApp() {
                 )}
               </div>
 
-              <div className="border-2 border-gray-300 rounded-lg p-4 bg-gray-50">
+              <div className="border-2 border-gray-300 rounded-lg p-4 bg-gray-50 mb-4">
                 <h4 className="text-sm font-semibold text-gray-600 mb-3">
                   Contoh Gambar:
                 </h4>
@@ -203,7 +206,8 @@ export default function DrawingApp() {
                 </div>
               </div>
 
-              <div className="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+              {/* UBAH: Ditambahkan 'mt-auto' agar tips ini terdorong ke paling bawah */}
+              <div className="mt-auto p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
                 <p className="text-sm text-yellow-800">
                   💡 <strong>Tips:</strong> Lihat contoh gambar di atas sebagai referensi, lalu coba gambar versi kamu sendiri!
                 </p>
@@ -214,10 +218,8 @@ export default function DrawingApp() {
           {/* Panel Gambar - Kanan */}
           <div className="lg:col-span-1 flex flex-col">
             
-            {/* UBAH: Toolbar dibuat lebih tipis (p-2) dan compact */}
+            {/* Toolbar Tipis */}
             <div className="bg-white rounded-lg shadow-lg p-2 mb-2 flex flex-wrap items-center justify-between gap-2">
-                
-                {/* Grup Alat (Pena & Hapus - Tanpa Teks) */}
                 <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
                   <button
                     onClick={() => setTool('pen')}
@@ -239,7 +241,6 @@ export default function DrawingApp() {
                   </button>
                 </div>
 
-                {/* Grup Slider & Warna */}
                 <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded-lg">
                   <input
                     type="range" min="1" max="20"
@@ -269,7 +270,6 @@ export default function DrawingApp() {
                   </div>
                 </div>
 
-                {/* Grup Aksi (Hapus Semua & Download - Ikon Saja) */}
                 <div className="flex gap-1">
                   <button
                     onClick={clearCanvas}
@@ -288,9 +288,8 @@ export default function DrawingApp() {
                 </div>
             </div>
 
-            {/* Canvas */}
-            <div className="bg-white rounded-lg shadow-lg p-2">
-              {/* UBAH: Tinggi canvas diubah jadi 750px */}
+            {/* Canvas Tinggi */}
+            <div className="bg-white rounded-lg shadow-lg p-2 h-full">
               <canvas
                 ref={canvasRef}
                 onPointerDown={startDrawing}
