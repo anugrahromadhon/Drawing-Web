@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Download, Eraser, Trash2, Palette, RefreshCw } from 'lucide-react';
+import { Download, Eraser, Trash2, Palette, RefreshCw, Pencil } from 'lucide-react';
 
 export default function DrawingApp() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -44,7 +44,8 @@ export default function DrawingApp() {
 
     const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
     const width = canvas.offsetWidth || 800;
-    const height = canvas.offsetHeight || 600;
+    // UBAH: Tinggi default diperbesar agar panjang ke bawah
+    const height = canvas.offsetHeight || 750;
 
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
@@ -110,9 +111,7 @@ export default function DrawingApp() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-   
     (e.target as HTMLCanvasElement).releasePointerCapture?.(e.pointerId);
-   
     ctx.closePath();
     setIsDrawing(false);
   };
@@ -120,12 +119,9 @@ export default function DrawingApp() {
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-   
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-   
     const dpr = (typeof window !== "undefined" ? window.devicePixelRatio : 1) || 1;
-   
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -135,14 +131,11 @@ export default function DrawingApp() {
   const exportImage = (format: "png" | "jpeg" = "png") => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-   
     const mime = format === "jpeg" ? "image/jpeg" : "image/png";
     const title = (questions && questions[currentQuestion]?.title) || "drawing";
     const safeTitle = title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
     const filename = `gambar-${safeTitle}.${format}`;
-   
     const dataUrl = canvas.toDataURL(mime);
-   
     const link = document.createElement("a");
     link.href = dataUrl;
     link.download = filename;
@@ -163,7 +156,6 @@ export default function DrawingApp() {
           🎨 Papan Gambar Digital - Damar Kurung
         </h1>
 
-        {/* UBAH: Grid jadi 2 kolom (lg:grid-cols-2) agar 50:50 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           
           {/* Panel Soal - Kiri */}
@@ -220,108 +212,85 @@ export default function DrawingApp() {
           </div>
 
           {/* Panel Gambar - Kanan */}
-          {/* UBAH: col-span jadi 1 (lg:col-span-1) agar lebar sama dengan kiri */}
-          <div className="lg:col-span-1">
-            {/* Toolbar */}
-            <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex gap-2">
+          <div className="lg:col-span-1 flex flex-col">
+            
+            {/* UBAH: Toolbar dibuat lebih tipis (p-2) dan compact */}
+            <div className="bg-white rounded-lg shadow-lg p-2 mb-2 flex flex-wrap items-center justify-between gap-2">
+                
+                {/* Grup Alat (Pena & Hapus - Tanpa Teks) */}
+                <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
                   <button
                     onClick={() => setTool('pen')}
-                    className={`px-4 py-2 rounded-lg font-medium transition ${
-                      tool === 'pen'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    className={`p-2 rounded-md transition ${
+                      tool === 'pen' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'
                     }`}
+                    title="Pena"
                   >
-                    ✏️ Pena
+                    <Pencil size={20} />
                   </button>
                   <button
                     onClick={() => setTool('eraser')}
-                    className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
-                      tool === 'eraser'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    className={`p-2 rounded-md transition ${
+                      tool === 'eraser' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'
                     }`}
+                    title="Penghapus"
                   >
-                    <Eraser size={18} /> Hapus
+                    <Eraser size={20} />
                   </button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Ukuran: {brushSize}px
-                  </label>
+                {/* Grup Slider & Warna */}
+                <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded-lg">
                   <input
-                    type="range"
-                    min="1"
-                    max="20"
+                    type="range" min="1" max="20"
                     value={brushSize}
                     onChange={(e) => setBrushSize(Number(e.target.value))}
-                    className="w-32"
+                    className="w-24 h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+                    title="Ukuran Kuas"
                   />
-                </div>
-
-                <div className="relative">
-                  <button
-                    onClick={() => setShowColorPicker(!showColorPicker)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
-                  >
-                    <Palette size={18} />
-                    <div
-                      className="w-6 h-6 rounded border-2 border-gray-400"
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowColorPicker(!showColorPicker)}
+                      className="w-7 h-7 rounded-full border border-gray-300 shadow-sm"
                       style={{ backgroundColor: color }}
                     />
-                  </button>
-                  
-                  {showColorPicker && (
-                    <div className="absolute top-12 left-0 bg-white rounded-lg shadow-xl p-3 z-10 grid grid-cols-5 gap-2">
-                      {colors.map((c) => (
-                        <button
-                          key={c}
-                          onClick={() => {
-                            setColor(c);
-                            setShowColorPicker(false);
-                          }}
-                          className="w-8 h-8 rounded border-2 border-gray-300 hover:scale-110 transition"
-                          style={{ backgroundColor: c }}
-                        />
-                      ))}
-                      <input
-                        type="color"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                        className="w-8 h-8 rounded cursor-pointer col-span-5"
-                      />
-                    </div>
-                  )}
+                    {showColorPicker && (
+                      <div className="absolute top-10 right-0 bg-white rounded-lg shadow-xl p-2 z-10 grid grid-cols-5 gap-1 w-40">
+                        {colors.map((c) => (
+                          <button
+                            key={c}
+                            onClick={() => { setColor(c); setShowColorPicker(false); }}
+                            className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex gap-2 ml-auto">
+                {/* Grup Aksi (Hapus Semua & Download - Ikon Saja) */}
+                <div className="flex gap-1">
                   <button
                     onClick={clearCanvas}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition flex items-center gap-2"
+                    className="p-2 bg-red-100 text-red-500 rounded-lg hover:bg-red-200 transition"
+                    title="Bersihkan Kanvas"
                   >
-                    <Trash2 size={18} /> Hapus
+                    <Trash2 size={20} />
                   </button>
                   <button
                     onClick={() => exportImage('png')}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center gap-2"
+                    className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition"
+                    title="Download Gambar"
                   >
-                    <Download size={18} /> PNG
-                  </button>
-                  <button
-                    onClick={() => exportImage('jpeg')}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center gap-2"
-                  >
-                    <Download size={18} /> JPG
+                    <Download size={20} />
                   </button>
                 </div>
-              </div>
             </div>
 
             {/* Canvas */}
-            <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="bg-white rounded-lg shadow-lg p-2">
+              {/* UBAH: Tinggi canvas diubah jadi 750px */}
               <canvas
                 ref={canvasRef}
                 onPointerDown={startDrawing}
@@ -329,13 +298,9 @@ export default function DrawingApp() {
                 onPointerUp={stopDrawing}
                 onPointerLeave={stopDrawing}
                 className="w-full border-2 border-gray-300 rounded cursor-crosshair touch-none"
-                style={{ height: '600px' }}
+                style={{ height: '750px' }} 
               />
             </div>
-
-            <p className="text-center mt-4 text-gray-600">
-              Gunakan mouse atau sentuh layar untuk menggambar di kanvas. Selamat berkreasi! 🎨
-            </p>
           </div>
         </div>
       </div>
