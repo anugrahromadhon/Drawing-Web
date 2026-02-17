@@ -163,7 +163,7 @@ export default function DrawingApp() {
           🎨 Papan Gambar Digital - Damar Kurung
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Panel Soal - Kiri */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-lg p-6 sticky top-4">
@@ -218,7 +218,7 @@ export default function DrawingApp() {
           </div>
 
           {/* Panel Gambar - Kanan */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-1">
             {/* Toolbar */}
             <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
               <div className="flex flex-wrap items-center gap-4">
